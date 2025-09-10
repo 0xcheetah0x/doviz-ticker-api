@@ -13,6 +13,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Ana sayfa endpointi
+@app.get("/")
+def root():
+    return {
+        "message": "Doviz Ticker API çalışıyor 🚀",
+        "endpoints": {
+            "/api/doviz": "USD, EUR ve BTC bilgilerini getirir"
+        }
+    }
+
 @app.get("/api/doviz")
 def doviz():
     try:
