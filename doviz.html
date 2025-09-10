@@ -1,103 +1,59 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>Döviz Ticker</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: transparent; /* OBS için şeffaf arka plan */
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
-
-    .ticker-wrapper {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      color: #fff;
-      padding: 10px 0;
-      display: flex;
-      align-items: center;
-    }
-
-    .live {
-      color: red;
-      font-weight: bold;
-      margin-right: 20px;
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
-
-    .ticker {
-      display: inline-block;
-      white-space: nowrap;
-      padding-left: 100%;
-      animation: ticker 30s linear infinite;
-      font-size: 20px;
-    }
-
-    @keyframes ticker {
-      0%   { transform: translateX(0%); }
-      100% { transform: translateX(-100%); }
-    }
-
-    .flag {
-      margin-right: 5px;
-    }
-
-    .separator {
-      margin: 0 15px;
-      color: #aaa;
-    }
-
-    .time {
-      margin-left: 20px;
-      font-size: 14px;
-      color: #ccc;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Döviz Ticker</title>
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            overflow: hidden;
+        }
+        .ticker {
+            white-space: nowrap;
+            display: inline-block;
+            animation: scroll 25s linear infinite;
+        }
+        @keyframes scroll {
+            from { transform: translateX(100%); }
+            to { transform: translateX(-100%); }
+        }
+        .item {
+            margin: 0 20px;
+        }
+    </style>
 </head>
 <body>
-  <div class="ticker-wrapper">
-    <div class="live">● Canlı</div>
     <div id="ticker" class="ticker">Yükleniyor...</div>
-    <div id="time" class="time"></div>
-  </div>
 
-  <script>
-    async function fetchData() {
-      try {
-        const res = await fetch("/api/doviz");
-        const data = await res.json();
+    <script>
+        async function fetchData() {
+            try {
+                const res = await fetch("/api/doviz");
+                const data = await res.json();
 
-        const ticker = document.getElementById("ticker");
-        ticker.innerHTML = `
-          <span class="flag">🇺🇸</span> USD/TRY: ${data.usdtry} 
-          <span class="separator">♦</span>
-          <span class="flag">🇪🇺</span> EUR/TRY: ${data.eurtry} 
-          <span class="separator">♦</span>
-          <span class="flag">🇬🇧</span> GBP/TRY: ${data.gbptry} 
-          <span class="separator">♦</span>
-          <span class="flag">🇨🇭</span> CHF/TRY: ${data.chftry} 
-          <span class="separator">♦</span>
-          <span class="flag">🇯🇵</span> JPY/TRY: ${data.jpytry}
-        `;
+                // Bayraklı ticker
+                const items = [
+                    `🇺🇸 USD/TRY: ${data.usdtry}`,
+                    `🇪🇺 EUR/TRY: ${data.eurtry}`,
+                    `🇬🇧 GBP/TRY: ${data.gbptry}`,
+                    `🇨🇭 CHF/TRY: ${data.chftry}`,
+                    `🇯🇵 JPY/TRY: ${data.jpytry}`
+                ];
 
-        // Son güncelleme zamanı
-        const now = new Date();
-        document.getElementById("time").textContent =
-          "Son güncelleme: " + now.toLocaleTimeString("tr-TR");
-      } catch (e) {
-        document.getElementById("ticker").textContent = "Veri alınamadı ❌";
-      }
-    }
+                document.getElementById("ticker").innerHTML = items.map(
+                    i => `<span class="item">${i}</span>`
+                ).join(" ♦ ");
+            } catch (err) {
+                document.getElementById("ticker").innerText = "Veri alınamadı!";
+            }
+        }
 
-    fetchData();
-    setInterval(fetchData, 60000); // Her 1 dakikada bir güncelle
-  </script>
+        fetchData();
+        setInterval(fetchData, 60000); // 1 dakikada bir güncelle
+    </script>
 </body>
 </html>
