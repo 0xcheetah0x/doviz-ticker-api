@@ -24,7 +24,13 @@
         .item {
             margin: 0 20px;
         }
+        img.emoji {
+            height: 20px;
+            vertical-align: middle;
+        }
     </style>
+    <!-- Twemoji -->
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="ticker" class="ticker">Yükleniyor...</div>
@@ -47,13 +53,16 @@
                 document.getElementById("ticker").innerHTML = items.map(
                     i => `<span class="item">${i}</span>`
                 ).join(" ♦ ");
+
+                // Twemoji ile bayrakları resme çevir
+                twemoji.parse(document.body);
             } catch (err) {
                 document.getElementById("ticker").innerText = "Veri alınamadı!";
             }
         }
 
         fetchData();
-        setInterval(fetchData, 60000); // 1 dakikada bir güncelle
+        setInterval(fetchData, 60000);
     </script>
 </body>
 </html>
