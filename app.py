@@ -13,15 +13,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Ana sayfa endpointi
 @app.get("/")
 def root():
-    return {
-        "message": "Doviz Ticker API çalışıyor 🚀",
-        "endpoints": {
-            "/api/doviz": "USD, EUR ve BTC bilgilerini getirir"
-        }
-    }
+    return {"message": "Doviz Ticker API çalışıyor"}
 
 @app.get("/api/doviz")
 def doviz():
@@ -31,14 +25,9 @@ def doviz():
         usdtry = round(fx["rates"]["TRY"], 2)
         eurtry = round(fx["rates"]["TRY"] / fx["rates"]["EUR"], 2)
 
-        # Bitcoin verisi
-        btc = requests.get("https://api.coindesk.com/v1/bpi/currentprice/USD.json").json()
-        btcusd = round(btc["bpi"]["USD"]["rate_float"], 0)
-
         return {
             "usdtry": usdtry,
-            "eurtry": eurtry,
-            "btcusd": btcusd
+            "eurtry": eurtry
         }
     except Exception as e:
         return {"error": str(e)}
