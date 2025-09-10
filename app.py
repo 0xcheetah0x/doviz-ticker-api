@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 import requests
+import os
 
 app = FastAPI()
 
@@ -15,7 +17,7 @@ app.add_middleware(
 
 @app.get("/")
 def root():
-    return {"message": "Doviz Ticker API çalışıyor"}
+    return {"message": "Doviz Ticker API çalışıyor 🚀"}
 
 @app.get("/api/doviz")
 def doviz():
@@ -31,3 +33,8 @@ def doviz():
         }
     except Exception as e:
         return {"error": str(e)}
+
+# doviz.html dosyasını servis et
+@app.get("/doviz.html")
+def get_html():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "doviz.html"))
