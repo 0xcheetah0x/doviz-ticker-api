@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="10"> <!-- 10 saniyede bir yenile -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 28px;
+      color: white;
+      background-color: black;
+      margin: 0;
+      padding: 0;
+    }
+    .ticker {
+      display: flex;
+      gap: 20px;
+      padding: 10px;
+    }
+    .item {
+      padding: 10px 20px;
+      background: #222;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="ticker" id="ticker"></div>
+
+  <script>
+    async function fetchData() {
+      try {
+        const res = await fetch("https://doviz-ticker-api.onrender.com/api/doviz");
+        const data = await res.json();
+        document.getElementById("ticker").innerHTML = `
+          <div class="item">USD/TRY: ${data.usdtry}</div>
+          <div class="item">EUR/TRY: ${data.eurtry}</div>
+        `;
+      } catch (err) {
+        document.getElementById("ticker").innerText = "Veri alınamadı";
+      }
+    }
+    fetchData();
+    setInterval(fetchData, 10000); // 10 saniyede bir güncelle
+  </script>
+</body>
+</html>
