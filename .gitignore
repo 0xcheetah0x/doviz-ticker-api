@@ -1,0 +1,15 @@
+﻿# Büyük medya dosyalarını hariç tut
+stok videolar/
+stok videolar-2/
+stok videolar-3/
+*.mp4
+*.xspf
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.txt
+
+# Sistem dosyaları
+.DS_Store
+Thumbs.db
