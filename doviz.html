@@ -7,18 +7,26 @@
         body {
             margin: 0;
             padding: 0;
-            background: black;
-            color: white;
+            background: transparent; /* OBS için şeffaf */
             font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .ticker-wrapper {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.7); /* yarı saydam siyah şerit */
+            color: white;
+            white-space: nowrap;
             overflow: hidden;
         }
         .ticker {
             display: flex;
             align-items: center;
-            white-space: nowrap;
             animation: scroll-left 25s linear infinite;
             font-size: 22px;
-            padding: 10px 0;
+            padding: 8px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9); /* yazı gölgesi */
         }
         .item {
             display: flex;
@@ -46,7 +54,9 @@
     </style>
 </head>
 <body>
-    <div class="ticker" id="ticker"></div>
+    <div class="ticker-wrapper">
+        <div class="ticker" id="ticker"></div>
+    </div>
 
     <script>
         async function fetchData() {
