@@ -19,11 +19,14 @@ app.add_middleware(
 @app.get("/api/doviz")
 def doviz():
     try:
-        # TRY bazlı çağırıyoruz, böylece doğrudan oranlar geliyor
+        # TRY bazlı çağırıyoruz
         url = "https://api.exchangerate.host/latest?base=TRY&symbols=USD,EUR,GBP,CHF,JPY"
         fx = requests.get(url).json()
 
         rates = fx.get("rates", {})
+
+        # Büyük/küçük harf farkını normalize edelim
+        rates = {k.upper(): v for k, v in rates.items()}
 
         usdtry = round(1 / rates["USD"], 2)
         eurtry = round(1 / rates["EUR"], 2)
