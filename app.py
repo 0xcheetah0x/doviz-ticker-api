@@ -6,7 +6,7 @@ import os
 
 app = FastAPI()
 
-# CORS açıyoruz (OBS tarayıcı kaynağı rahat erişsin diye)
+# CORS (OBS tarayıcı kaynağı için)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,8 +19,10 @@ app.add_middleware(
 @app.get("/api/doviz")
 def doviz():
     try:
-        # USD & EUR verisi
-        fx = requests.get("https://open.er-api.com/v6/latest/USD").json()
+        # ExchangeRate.host API
+        url = "https://api.exchangerate.host/latest?base=USD&symbols=TRY,EUR,GBP,CHF,JPY"
+        fx = requests.get(url).json()
+
         usdtry = round(fx["rates"]["TRY"], 2)
         eurtry = round(fx["rates"]["TRY"] / fx["rates"]["EUR"], 2)
         gbptry = round(fx["rates"]["TRY"] / fx["rates"]["GBP"], 2)
@@ -37,7 +39,7 @@ def doviz():
     except Exception as e:
         return {"error": str(e)}
 
-# doviz.html'i render et
+# doviz.html render
 @app.get("/doviz.html")
 def serve_html():
     return FileResponse(os.path.join(os.path.dirname(__file__), "doviz.html"))
