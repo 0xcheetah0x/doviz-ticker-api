@@ -19,15 +19,17 @@ app.add_middleware(
 @app.get("/api/doviz")
 def doviz():
     try:
-        # ExchangeRate.host API
-        url = "https://api.exchangerate.host/latest?base=USD&symbols=TRY,EUR,GBP,CHF,JPY"
+        # TRY bazlı çağırıyoruz, böylece doğrudan oranlar geliyor
+        url = "https://api.exchangerate.host/latest?base=TRY&symbols=USD,EUR,GBP,CHF,JPY"
         fx = requests.get(url).json()
 
-        usdtry = round(fx["rates"]["TRY"], 2)
-        eurtry = round(fx["rates"]["TRY"] / fx["rates"]["EUR"], 2)
-        gbptry = round(fx["rates"]["TRY"] / fx["rates"]["GBP"], 2)
-        chftry = round(fx["rates"]["TRY"] / fx["rates"]["CHF"], 2)
-        jpytry = round(fx["rates"]["TRY"] / fx["rates"]["JPY"], 2)
+        rates = fx.get("rates", {})
+
+        usdtry = round(1 / rates["USD"], 2)
+        eurtry = round(1 / rates["EUR"], 2)
+        gbptry = round(1 / rates["GBP"], 2)
+        chftry = round(1 / rates["CHF"], 2)
+        jpytry = round(1 / rates["JPY"], 2)
 
         return {
             "usdtry": usdtry,
