@@ -6,7 +6,7 @@ import os
 
 app = FastAPI()
 
-# CORS (OBS tarayıcı kaynağı için)
+# CORS ayarları
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,20 +19,15 @@ app.add_middleware(
 @app.get("/api/doviz")
 def doviz():
     try:
-        # TRY bazlı çağırıyoruz
-        url = "https://api.exchangerate.host/latest?base=TRY&symbols=USD,EUR,GBP,CHF,JPY"
-        fx = requests.get(url).json()
+        # frankfurter API kullanıyoruz
+        fx = requests.get("https://api.frankfurter.app/latest?from=USD&to=TRY,EUR,GBP,CHF,JPY").json()
+        rates = fx["rates"]
 
-        rates = fx.get("rates", {})
-
-        # Büyük/küçük harf farkını normalize edelim
-        rates = {k.upper(): v for k, v in rates.items()}
-
-        usdtry = round(1 / rates["USD"], 2)
-        eurtry = round(1 / rates["EUR"], 2)
-        gbptry = round(1 / rates["GBP"], 2)
-        chftry = round(1 / rates["CHF"], 2)
-        jpytry = round(1 / rates["JPY"], 2)
+        usdtry = round(rates["TRY"], 2)
+        eurtry = round(rates["TRY"] / rates["EUR"], 2)
+        gbptry = round(rates["TRY"] / rates["GBP"], 2)
+        chftry = round(rates["TRY"] / rates["CHF"], 2)
+        jpytry = round(rates["TRY"] / rates["JPY"], 2)
 
         return {
             "usdtry": usdtry,
@@ -44,7 +39,7 @@ def doviz():
     except Exception as e:
         return {"error": str(e)}
 
-# doviz.html render
+# doviz.html'i render et
 @app.get("/doviz.html")
 def serve_html():
     return FileResponse(os.path.join(os.path.dirname(__file__), "doviz.html"))
